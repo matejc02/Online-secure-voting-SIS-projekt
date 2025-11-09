@@ -1,6 +1,6 @@
 # Online-secure-voting-SIS-projekt
 
-
+- [x] Odabrati tehnologije(Python i React)
 ##  TODO –
 
 ###  Zero-Knowledge Proof (ZKP) sustav
