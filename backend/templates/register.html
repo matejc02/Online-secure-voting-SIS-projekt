@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <title>SIS projekt</title>
+    </head>
+
+    <body>
+        <h1>Please register</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="POST" action="{{ url_for('get_post_register') }}">
+                    <div class="mb-3">
+                        <label class="form-label" for="username">Enter your username:</label>
+                        <input type="text" id="username" name="username">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Enter your email:</label>
+                        <input type="text" id="email" name="email">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Enter your password</label>
+                        <input type="text" id="password" name="password">
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
