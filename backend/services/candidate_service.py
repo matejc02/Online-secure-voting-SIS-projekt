@@ -7,11 +7,11 @@ def create_candidate(username, email, description):
     usernames = [user.fullname for user in db.session.execute(db.select(Candidate)).scalars().all()]
     emails = [user.email for user in db.session.execute(db.select(Candidate)).scalars().all()]
 
-    if username in usernames:
-        return {"message": "That name already exists !"}
+    if username in usernames or username == "":
+        return {"success": False, "message": "That name already exists !"}
 
-    if email in emails:
-        return {"message": "That email already exists !"}
+    if email in emails or email == "":
+        return {"success": False, "message": "That email already exists !"}
 
     new_candidate = Candidate(
         fullname=username,
@@ -22,7 +22,7 @@ def create_candidate(username, email, description):
     db.session.add(new_candidate)
     db.session.commit()
 
-    return {"message": "success"}
+    return {"success": True, "message": "Candidate succsessfully added"}
 
 def get_all_candidates():
     all_candidates = [candidate for candidate in db.session.execute(db.select(Candidate)).scalars().all()]
@@ -35,7 +35,7 @@ def get_all_candidates():
 def get_current_winner():
     pass
 
-def delete_candidate(id_candidate):
+def delete_candidate_f(id_candidate):
     db.session.delete(db.session.execute(db.select(Candidate).where(Candidate.id == id_candidate)).scalar())
     db.session.commit()
 

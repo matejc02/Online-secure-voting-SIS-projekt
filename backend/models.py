@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, Boolean
 
 class Base(DeclarativeBase):
     pass
@@ -23,4 +23,11 @@ class Candidate(Base):
     fullname: Mapped[str] = mapped_column(String(300), nullable=False)
     email: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
     description: Mapped[str] = mapped_column(String(1500), unique=True, nullable=False)
+
+class VotingStatus(Base):
+    __tablename__ = "voting_status"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+
 

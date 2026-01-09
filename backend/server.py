@@ -2,9 +2,11 @@ from flask import Flask, abort, render_template, redirect, url_for, flash, reque
 from functools import wraps
 from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
-from models import db
+from models import db, VotingStatus
 from services.authentication_service import jwt_required, login_user, register_user
-from services.candidate_service import create_candidate, get_all_candidates, delete_candidate
+from services.candidate_service import create_candidate, get_all_candidates, delete_candidate_f
+from services.user_service import create_user, get_all_users, delete_user_f
+from services.voting_service import start_voting, stop_voting, is_voting_active
 
 
 app = Flask(__name__)
@@ -17,6 +19,9 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+    if not db.session.execute(db.select(VotingStatus)).scalar():
+        db.session.add(VotingStatus(is_active=False))
+        db.session.commit()
 
 @app.route("/")
 def get_home_page():
@@ -73,7 +78,8 @@ def get_post_register():
 @jwt_required('VOTER')
 def get_post_vote():
     if request.method == "POST":
-        pass
+        if is_voting_active() == False:
+            abort(403)
 
     return render_template('vote.html')
 
@@ -81,6 +87,9 @@ def get_post_vote():
 @jwt_required('ADMIN')
 def get_post_candidates():
     if request.method == "POST":
+        if is_voting_active():
+            abort(403)
+
         username = request.form.get("name")
         email = request.form.get("email")
         description = request.form.get("description")
@@ -101,15 +110,52 @@ def get_post_candidates():
 
 @app.route('/deleteCandidates/<int:id_candidate>', methods=["POST"])
 @jwt_required('ADMIN')
-def delete_candidates(id_candidate):
-    delete_candidate(id_candidate)
+def delete_candidate(id_candidate):
+    if is_voting_active():
+        abort(403)
+    delete_candidate_f(id_candidate)
     return redirect(url_for('get_post_candidates'))
 
 @app.route('/allUsers', methods=["GET", "POST"])
 @jwt_required('ADMIN')
 def get_post_users():
-    pass
+    if request.method == "POST":
+        username = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        print(" " + username + " " + email + " " + password)
 
+        create_user(username, email, password)
+        return redirect(url_for('get_post_users'))
+
+    message = get_all_users()
+    data = []
+    if message["success"]:
+        print(message['data'])
+        data = message['data']
+    else:
+        print(message['message'])
+    return render_template('users.html', users=data)
+
+@app.route('/deleteUser/<int:id_user>', methods=["POST"])
+@jwt_required('ADMIN')
+def delete_user(id_user):
+    if is_voting_active():
+        abort(403)
+    delete_user_f(id_user)
+    return redirect(url_for('get_post_users'))
+
+@app.route('/voting/start', methods=["POST"])
+@jwt_required('ADMIN')
+def start_voting_route():
+    start_voting()
+    return redirect(request.referrer)
+
+@app.route('/voting/stop', methods=["POST"])
+@jwt_required('ADMIN')
+def stop_voting_route():
+    stop_voting()
+    return redirect(request.referrer)
 
 @app.route('/refresh', methods=["GET", "POST"])
 @jwt_required('ADMIN')
@@ -119,12 +165,12 @@ def get_post_refresh():
 @app.route('/results')
 @jwt_required('ADMIN')
 def get_show_results():
-    return "ADMIN ONLY !"
+    return render_template('results.html')
 
 @app.route('/winner')
 @jwt_required()
 def get_winner():
-    return "Ovdje ide html"
+    return render_template('winner.html')
 
 @app.route('/logout')
 @jwt_required()
