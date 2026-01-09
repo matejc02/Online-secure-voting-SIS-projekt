@@ -4,6 +4,8 @@ from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
 from models import db
 from services.authentication_service import jwt_required, login_user, register_user
+from services.candidate_service import create_candidate, get_all_candidates, delete_candidate
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'fjm034jhf0439uf423huj546890z2mf03j406h4v'
@@ -29,7 +31,7 @@ def get_post_login():
 
         message = login_user(email, password)
 
-        if message['message'] != "success":
+        if message['success'] == False:
             print(message['message'])
             return redirect(url_for('get_home_page'))
 
@@ -75,10 +77,54 @@ def get_post_vote():
 
     return render_template('vote.html')
 
+@app.route('/candidates', methods=["GET", "POST"])
+@jwt_required('ADMIN')
+def get_post_candidates():
+    if request.method == "POST":
+        username = request.form.get("name")
+        email = request.form.get("email")
+        description = request.form.get("description")
+
+        print(" " + username + " " + email + " " + description)
+        create_candidate(username, email, description)
+
+        return redirect(url_for('get_post_candidates'))
+
+    message = get_all_candidates()
+    data = []
+    if message["success"]:
+        print(message['data'])
+        data = message['data']
+    else:
+        print(message['message'])
+    return render_template('candidates.html', candidates=data)
+
+@app.route('/deleteCandidates/<int:id_candidate>', methods=["POST"])
+@jwt_required('ADMIN')
+def delete_candidates(id_candidate):
+    delete_candidate(id_candidate)
+    return redirect(url_for('get_post_candidates'))
+
+@app.route('/allUsers', methods=["GET", "POST"])
+@jwt_required('ADMIN')
+def get_post_users():
+    pass
+
+
+@app.route('/refresh', methods=["GET", "POST"])
+@jwt_required('ADMIN')
+def get_post_refresh():
+    pass
+
 @app.route('/results')
 @jwt_required('ADMIN')
 def get_show_results():
     return "ADMIN ONLY !"
+
+@app.route('/winner')
+@jwt_required()
+def get_winner():
+    return "Ovdje ide html"
 
 @app.route('/logout')
 @jwt_required()

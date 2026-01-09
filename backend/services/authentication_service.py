@@ -1,4 +1,4 @@
-from flask import request, abort, redirect, url_for, make_response
+from flask import request, abort
 from functools import wraps
 import jwt
 from datetime import datetime
@@ -43,26 +43,27 @@ def login_user(email, password):
     emails = [user.email for user in db.session.execute(db.select(User)).scalars().all()]
 
     if email not in emails:
-        return {"message": "Email does not exists"}
+        return {"success": False, "message": "Email does not exists"}
     
     user = db.session.execute(db.select(User).where(User.email == email)).scalar()
 
     if password == user.password:
         jwt_token = create_jwt(user)
-        return {"message": "success", "token": jwt_token, "user": user}
+        return {"success": True, "message": "success", "token": jwt_token, "user": user}
         
-    return {"message": "Wrong password"}
+    return {"success": False, "message": "Wrong password"}
+
 
 def register_user(username, email, password):
     emails = [user.email for user in db.session.execute(db.select(User)).scalars().all()]
     usernames = [user.username for user in db.session.execute(db.select(User)).scalars().all()]
 
-    if email in emails:
+    if email in emails or email == "":
         print("Email already exists")
-        return {"message": "Email already exists"}
+        return {"success": False, "message": "Email already exists"}
     
-    if username in usernames:
-        return {"message": "Username already exists"}
+    if username in usernames or username == "":
+        return {"success": False, "message": "Username already exists"}
     
     new_User = User(
         username=username,
@@ -76,6 +77,6 @@ def register_user(username, email, password):
     
     jwt_token = create_jwt(new_User)
     
-    return {"message": "success", "token": jwt_token}
+    return {"success": True, "message": "success", "token": jwt_token}
 
 

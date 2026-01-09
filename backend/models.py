@@ -15,3 +15,12 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(100), nullable=False)
     role: Mapped[str] = mapped_column(String(30), nullable=False)
+
+class Candidate(Base):
+    __tablename__ = "candidate"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    fullname: Mapped[str] = mapped_column(String(300), nullable=False)
+    email: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
+    description: Mapped[str] = mapped_column(String(1500), unique=True, nullable=False)
+
