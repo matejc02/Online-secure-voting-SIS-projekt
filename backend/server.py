@@ -2,7 +2,7 @@ from flask import Flask, abort, render_template, redirect, url_for, flash, reque
 from functools import wraps
 from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
-from models import db, VotingStatus
+from models.models import db, VotingStatus
 from services.authentication_service import jwt_required, login_user, register_user
 from services.candidate_service import create_candidate, get_all_candidates, delete_candidate_f
 from services.user_service import create_user, get_all_users, delete_user_f
@@ -46,7 +46,7 @@ def get_post_login():
             response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
             return response
         
-        response = make_response(redirect(url_for('get_post_vote')))
+        response = make_response(redirect(url_for('get_vote')))
         jwt_token = message['token']
         response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
         return response
@@ -74,14 +74,22 @@ def get_post_register():
 
     return render_template('register.html')
 
-@app.route('/vote', methods=["GET", "POST"])
+@app.route('/vote')
 @jwt_required('VOTER')
-def get_post_vote():
-    if request.method == "POST":
-        if is_voting_active() == False:
-            abort(403)
+def get_vote():
+    data = []
+    if is_voting_active():
+        data = get_all_candidates()['data']
+    
+    return render_template('vote.html', candidates=data)
 
-    return render_template('vote.html')
+@app.route('/vote/<int:id_candidate>', methods=["POST"])
+@jwt_required('VOTER')
+def post_vote(id_candidate):
+    if is_voting_active():
+        print(id_candidate)
+    
+    return redirect(url_for('get_vote'))
 
 @app.route('/candidates', methods=["GET", "POST"])
 @jwt_required('ADMIN')
@@ -108,7 +116,7 @@ def get_post_candidates():
         print(message['message'])
     return render_template('candidates.html', candidates=data)
 
-@app.route('/deleteCandidates/<int:id_candidate>', methods=["POST"])
+@app.route('/deleteCandidate/<int:id_candidate>', methods=["POST"])
 @jwt_required('ADMIN')
 def delete_candidate(id_candidate):
     if is_voting_active():

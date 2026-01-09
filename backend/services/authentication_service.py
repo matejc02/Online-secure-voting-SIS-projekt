@@ -3,7 +3,7 @@ from functools import wraps
 import jwt
 from datetime import datetime
 from flask import current_app
-from models import db, User
+from models.models import db, User
 
 def jwt_required(role=None):
     def wrapper(function):

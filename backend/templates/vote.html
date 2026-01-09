@@ -15,7 +15,40 @@
             <button><a href="{{url_for('logout')}}">Logout</a></button>
         </div>
         <div>
-            <p>Tu ide odabir kandidata.</p>
+            <h4>Candidates:</h4>
+            <div>
+                {% if candidates|length == 0 %}
+                    <p class="text-muted">No candidates found.</p>
+                {% else %}
+                <div class="row g-4">
+                
+                    {% for candidate in candidates %}
+                        <div class="col-md-4">
+                            <div class="card position-relative">
+                            
+                                <form method="POST" action="{{ url_for('post_vote', id_candidate=candidate.id) }}" class="position-absolute top-0 end-0 m-2">
+                                    <button type="submit" class="btn btn-link text-blue p-0">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                </form>
+                            
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ candidate.fullname }}</h5>
+                                    <p class="card-text text-muted">
+                                        email: {{ candidate.email }}
+                                    </p>
+                                    <p class="card-text">
+                                        {{ candidate.description }}
+                                    </p>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                </div>
+                {% endif %}
+            </div>
         </div>
     </body>
 </html>

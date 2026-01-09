@@ -1,7 +1,7 @@
 from flask import request, abort
 from datetime import datetime
 from flask import current_app
-from models import db, Candidate
+from models.models import db, Candidate
 
 def create_candidate(username, email, description):
     usernames = [user.fullname for user in db.session.execute(db.select(Candidate)).scalars().all()]

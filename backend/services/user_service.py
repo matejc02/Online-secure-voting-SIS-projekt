@@ -1,7 +1,7 @@
 from flask import request, abort
 from datetime import datetime
 from flask import current_app
-from models import db, User
+from models.models import db, User
 
 def create_user(username, email, password):
     usernames = [user.username for user in db.session.execute(db.select(User)).scalars().all()]

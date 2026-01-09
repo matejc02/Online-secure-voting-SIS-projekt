@@ -1,4 +1,4 @@
-from models import db, VotingStatus
+from models.models import db, VotingStatus
 
 def is_voting_active():
     status = db.session.execute(
