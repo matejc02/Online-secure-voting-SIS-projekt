@@ -4,6 +4,8 @@ import jwt
 from datetime import datetime
 from flask import current_app
 from models.models import db, User
+import secrets
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def jwt_required(role=None):
     def wrapper(function):
@@ -47,7 +49,7 @@ def login_user(email, password):
     
     user = db.session.execute(db.select(User).where(User.email == email)).scalar()
 
-    if password == user.password:
+    if check_password_hash(user.password, password):
         jwt_token = create_jwt(user)
         return {"success": True, "message": "success", "token": jwt_token, "user": user}
         
@@ -68,8 +70,9 @@ def register_user(username, email, password):
     new_User = User(
         username=username,
         email=email,
-        password=password,
-        role='VOTER'
+        password=generate_password_hash(password, method='pbkdf2:sha256', salt_length=8),
+        role='VOTER',
+        voting_token=secrets.token_hex(16)
     )
     
     db.session.add(new_User)

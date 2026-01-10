@@ -15,6 +15,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(100), nullable=False)
     role: Mapped[str] = mapped_column(String(30), nullable=False)
+    voting_token: Mapped[str] = mapped_column(String(450), nullable=True)
 
 class Candidate(Base):
     __tablename__ = "candidate"

@@ -2,6 +2,23 @@ from flask import request, abort
 from datetime import datetime
 from flask import current_app
 from models.models import db, User
+import secrets
+from werkzeug.security import generate_password_hash, check_password_hash
+
+def create_admin():
+    roles = [user.role for user in db.session.execute(db.select(User)).scalars().all()]
+    user = db.session.execute(db.select(User).where(User.id == 0)).scalar()
+    if 'ADMIN' not in roles and user == None:
+        new_user = User(
+            id=0,
+            username='admin',
+            email='admin@email.com',
+            password=generate_password_hash("12345", method='pbkdf2:sha256', salt_length=8),
+            role='ADMIN'
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
 
 def create_user(username, email, password):
     usernames = [user.username for user in db.session.execute(db.select(User)).scalars().all()]
@@ -16,8 +33,9 @@ def create_user(username, email, password):
     new_user = User(
         username=username,
         email=email,
-        password=password,
-        role='VOTER'
+        password=generate_password_hash(password, method='pbkdf2:sha256', salt_length=8),
+        role='VOTER',
+        voting_token=secrets.token_hex(16)
     )
 
     db.session.add(new_user)

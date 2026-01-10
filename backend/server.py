@@ -5,9 +5,8 @@ from datetime import datetime, timedelta
 from models.models import db, VotingStatus
 from services.authentication_service import jwt_required, login_user, register_user
 from services.candidate_service import create_candidate, get_all_candidates, delete_candidate_f
-from services.user_service import create_user, get_all_users, delete_user_f
+from services.user_service import create_user, get_all_users, delete_user_f, create_admin
 from services.voting_service import start_voting, stop_voting, is_voting_active
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'fjm034jhf0439uf423huj546890z2mf03j406h4v'
@@ -22,6 +21,7 @@ with app.app_context():
     if not db.session.execute(db.select(VotingStatus)).scalar():
         db.session.add(VotingStatus(is_active=False))
         db.session.commit()
+    create_admin()
 
 @app.route("/")
 def get_home_page():
@@ -67,7 +67,7 @@ def get_post_register():
             print(message['message'])
             return redirect(url_for('get_home_page'))
         
-        response = make_response(redirect(url_for('get_post_vote')))
+        response = make_response(redirect(url_for('get_vote')))
         jwt_token = message['token']
         response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
         return response
