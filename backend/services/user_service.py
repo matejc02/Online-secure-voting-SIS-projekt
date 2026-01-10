@@ -1,7 +1,7 @@
 from flask import request, abort
 from datetime import datetime
 from flask import current_app
-from models.models import db, User
+from models.models import db, User, UsedTokens
 import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -51,10 +51,41 @@ def get_all_users():
     
     return {"success": False, "message": "There are no users"}
 
+def get_user_by_id(id):
+    user = db.session.execute(db.select(User).where(User.id == id)).scalar()
+    
+    return user
 
 def delete_user_f(id_user):
     db.session.delete(db.session.execute(db.select(User).where(User.id == id_user)).scalar())
     db.session.commit()
 
     return {"success": True}
+
+def get_used_tokens():
+    tokens = [used_token.token for used_token in db.session.execute(db.select(UsedTokens)).scalars().all()]
+    return tokens
+
+
+def delete_users_token(id):
+    user = db.session.execute(db.select(User).where(User.id == id)).scalar()
+
+    if not user:
+        return {"success": False, "message": "User not found"}
+    
+    user.voting_token = None
+    db.session.commit()
+
+    return {"success": True, "message": "Voting token deleted"}
+
+def set_token_to_all_users():
+    users = [user for user in db.session.execute(db.select(User)).scalars().all()]
+
+    for user in users:
+        if user.voting_token is None:
+            user.voting_token = secrets.token_hex(16)
+            db.session.commit()
+
+    return {"success": True}
+
 

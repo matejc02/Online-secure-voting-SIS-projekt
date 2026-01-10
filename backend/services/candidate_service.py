@@ -32,6 +32,14 @@ def get_all_candidates():
 
     return {"success": False, "message": "There are no candidates"}
 
+def get_candidate_by_id(id):
+    candidate = db.session.execute(db.select(Candidate).where(Candidate.id == id)).scalar()
+
+    if candidate:
+        return {"success": True, "candidate": candidate}
+    
+    return {"success": False, "message": "There is now candidate with that id"}
+
 def get_current_winner():
     pass
 

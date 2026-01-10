@@ -1,0 +1,11 @@
+[
+    {
+        "previousBlockHash": 0,
+        "commitment": 0,
+        "token_commitment": 0,
+        "zkp": 0,
+        "encrypted_vote": 0,
+        "timestamp": 0,
+        "blockHash": 0
+    }
+]

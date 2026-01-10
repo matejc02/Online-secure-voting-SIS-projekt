@@ -26,7 +26,32 @@
     {% include "navbar.html" %}
 
     <body>
-        <p>Ovdje idu rezultati</p>
+        <div>
+            <h2>Current results:</h2>
+        </div>
+
+        <div>
+            {% if data|length == 0 %}
+                <p class="text-muted">No results for now.</p>
+            {% else %}
+                <div class="row g-4">
+                
+                    {% for candidate, vote in data.items() %}
+                        <div class="col-md-4">
+                            <div class="card result-card shadow-sm">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Cnadidate: {{ candidate }}</h5>
+                                    <p class="votes text-primary">
+                                        Number of votes: {{ vote }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                </div>
+            {% endif %}
+        </div>
 
     </body>
 </html>

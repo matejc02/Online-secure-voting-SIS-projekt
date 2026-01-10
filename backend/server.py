@@ -4,9 +4,10 @@ from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
 from models.models import db, VotingStatus
 from services.authentication_service import jwt_required, login_user, register_user
-from services.candidate_service import create_candidate, get_all_candidates, delete_candidate_f
-from services.user_service import create_user, get_all_users, delete_user_f, create_admin
-from services.voting_service import start_voting, stop_voting, is_voting_active
+from services.candidate_service import create_candidate, get_all_candidates, get_candidate_by_id, delete_candidate_f
+from services.user_service import create_user, get_all_users, delete_user_f, create_admin, get_user_by_id, delete_users_token
+from services.voting_service import start_voting, stop_voting, is_voting_active, create_vote
+from services.blockchain_service import calculate_winner
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'fjm034jhf0439uf423huj546890z2mf03j406h4v'
@@ -80,7 +81,13 @@ def get_vote():
     data = []
     if is_voting_active():
         data = get_all_candidates()['data']
-    
+        return render_template('vote.html', candidates=data)
+
+    message = calculate_winner()
+    if message['success']:
+        data.append(message['winner'])
+        return render_template('vote.html', candidates=data)
+
     return render_template('vote.html', candidates=data)
 
 @app.route('/vote/<int:id_candidate>', methods=["POST"])
@@ -88,7 +95,19 @@ def get_vote():
 def post_vote(id_candidate):
     if is_voting_active():
         print(id_candidate)
-    
+
+        user_id = request.user['user_id']
+        print(user_id)
+        user = get_user_by_id(user_id)
+        token = user.voting_token
+
+        message = get_candidate_by_id(id_candidate)
+        if message['success']:
+            create_vote(message['candidate'], token)
+            delete_users_token(user.id)
+
+        return redirect(url_for('get_vote'))
+
     return redirect(url_for('get_vote'))
 
 @app.route('/candidates', methods=["GET", "POST"])
@@ -165,20 +184,25 @@ def stop_voting_route():
     stop_voting()
     return redirect(request.referrer)
 
-@app.route('/refresh', methods=["GET", "POST"])
-@jwt_required('ADMIN')
-def get_post_refresh():
-    pass
-
 @app.route('/results')
 @jwt_required('ADMIN')
 def get_show_results():
-    return render_template('results.html')
+    message = calculate_winner()
+    data = []
+    if message['success']:
+        data = message['votes']
+    
+    return render_template('results.html', data=data)
 
 @app.route('/winner')
 @jwt_required()
 def get_winner():
-    return render_template('winner.html')
+    message = calculate_winner()
+    data = ""
+    if message['success']:
+        data = message['winner']
+    
+    return render_template('winner.html', data=data)
 
 @app.route('/logout')
 @jwt_required()

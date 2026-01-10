@@ -23,9 +23,11 @@ class Block:
     def get_zkp(self):
         return self.zkp
     
-    def get_encrypted_vote(self):
+    def get_vote(self):
         return self.encrypted_vote
 
+    def get_timestamp(self):
+        return self.timestamp
 
 
 

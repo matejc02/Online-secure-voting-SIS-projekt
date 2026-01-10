@@ -31,4 +31,9 @@ class VotingStatus(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=False)
 
+class UsedTokens(Base):
+    __tablename__ = "used_tokens"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token: Mapped[str] = mapped_column(String(350), nullable=False)
 
