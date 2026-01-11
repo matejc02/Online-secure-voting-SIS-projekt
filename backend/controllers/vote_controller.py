@@ -36,7 +36,7 @@ def post_vote(id_candidate):
 
         message = get_candidate_by_id(id_candidate)
         if message['success']:
-            create_vote(message['candidate'], token)
+            create_vote(message['candidate'], token, user)
             delete_users_token(user.id)
 
         return redirect(url_for('vote.get_vote'))

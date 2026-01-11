@@ -12,7 +12,9 @@ def create_genesis_block():
             "zkp": 0,
             "encrypted_vote": 0,
             "timestamp": 0,
-            "blockHash": 0
+            "blockHash": 0,
+            "signature": 0,
+            "public_key": 0
         })
 
         with open("resources/blockchain.json", "w") as f:
@@ -29,7 +31,9 @@ def add_block(block):
         "zkp": block.get_zkp(),
         "encrypted_vote": block.get_vote(),
         "timestamp": block.get_timestamp(),
-        "blockHash": block.get_blockHash()
+        "blockHash": block.get_blockHash(),
+        "signature": block.get_signature(),
+        "public_key": block.get_public_key()
     })
 
     with open("resources/blockchain.json", "w") as f:

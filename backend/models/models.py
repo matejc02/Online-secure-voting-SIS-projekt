@@ -12,6 +12,9 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(30), nullable=False)
     voting_token: Mapped[str] = mapped_column(String(450), nullable=True)
 
+    public_key: Mapped[str] = mapped_column(String(1000), nullable=False)
+    private_key: Mapped[str] = mapped_column(String(2000), nullable=True)
+
 class Candidate(Base):
     __tablename__ = "candidate"
 

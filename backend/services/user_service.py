@@ -2,6 +2,9 @@ from models.models import User, UsedTokens
 from extensions import db
 import secrets
 from werkzeug.security import generate_password_hash
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 
 def create_admin():
     roles = [user.role for user in db.session.execute(db.select(User)).scalars().all()]
@@ -12,7 +15,8 @@ def create_admin():
             username='admin',
             email='admin@email.com',
             password=generate_password_hash("12345", method='pbkdf2:sha256', salt_length=8),
-            role='ADMIN'
+            role='ADMIN',
+            public_key='dfh92904hg974g2t97'
         )
 
         db.session.add(new_user)
@@ -28,12 +32,28 @@ def create_user(username, email, password):
     if email in emails or email == "":
         return {"success": False, "message": "That email username already exists"}
 
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+    public_key = private_key.public_key()
+
+    private_pem = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    ).decode("utf-8")
+
+    public_pem = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    ).decode("utf-8")
+
     new_user = User(
         username=username,
         email=email,
         password=generate_password_hash(password, method='pbkdf2:sha256', salt_length=8),
         role='VOTER',
-        voting_token=secrets.token_hex(16)
+        voting_token=secrets.token_hex(16),
+        public_key=public_pem,
+        private_key=private_pem
     )
 
     db.session.add(new_user)

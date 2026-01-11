@@ -6,6 +6,41 @@
         "zkp": 0,
         "encrypted_vote": 0,
         "timestamp": 0,
-        "blockHash": 0
+        "blockHash": 0,
+        "signature": 0,
+        "public_key": 0
+    },
+    {
+        "previousBlockHash": 0,
+        "commitment": "fee01ffedd22acad9b7fa2d72866938705a43de2ed3e700bdd0923e8247c442a",
+        "token_commitment": "ee752b81498a9d9687dfba15a80d6229",
+        "zkp": "6b0274d4a951c524ba3a8cb8ac002c4a9f238c258e7cd97e571a91aa2d46992e",
+        "encrypted_vote": 1,
+        "timestamp": 1768152288.8670533,
+        "blockHash": "0777fe795f25d6ee68d4f52d239ad12866b2ece8a5051f7e89b8d9288d0090dd",
+        "signature": "OPi4UlqcbDJ+WdbKFlFwaBeMn4XEQgwtqB0lGSEqgBcli8BqViUeJAcWWe+ijbHk5+eMe/IWp/i2WbQRiUca2mNPBaWSB585J06SbPfgDNyuX0D9zUzF2iMmGP7j3HNsxaZ+48YoBv7W5YUQH97YZAJjpkLsopsUt0X2Zt8mde0okxPJfDV/P/+h06GeGeJZsGFd+yVF6EmeWOPm7ShTBdZjzCO1aYzpdfNFW4+mqr9uYjQg+DqA+24985ZLR2d3FqRFi8ClKZavOp7tS4mX2JNVDA4yg18xi1b/ied0Cdsy4HJ0ci5qJvrd/TcqaDczdJF5ESr9PZ4kB5smMPwgkA==",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp1GkvhLt5fs33vdYkemc\nBnM5IdjTW/DgsahAkJW3ubaM4CaGzceCN5mKIC6qo007lYjtLvEcDqlYj0byJUeh\nl9Ku/ax+qClKwCdnx50eLbhBcA922wHPJOKHZNn7mfc8oBNz0iYkCmsdrMbXrk7S\n3icSmUMw3pouNppM7N287C9SQUDROBXlNph++2ItqWh5w7854K6y9Dfwz6UlHUN0\nAwsHJHpER1AcBp1EB1sZsNlGfl6v/b/liyJMkOduZ1YWQODS+0md3G8BmICorQWp\nQmRqzsxkqhHSChcTonpa4PZ2jVaP/USGrUXVV/LqFEKgSezEft6JwjTsjHqe8SgV\n9QIDAQAB\n-----END PUBLIC KEY-----\n"
+    },
+    {
+        "previousBlockHash": "0777fe795f25d6ee68d4f52d239ad12866b2ece8a5051f7e89b8d9288d0090dd",
+        "commitment": "d50dcddef660f7058ba7fec4d09a5c7ed03c6147341dbe7f1edfb2547005b8f7",
+        "token_commitment": "8bd62b797ecc2a7ea67fe8f1b714083a",
+        "zkp": "262223e8c5f047f2107f9abfa27cbe5af3b4148b301d937320737ecd53c02173",
+        "encrypted_vote": 2,
+        "timestamp": 1768152341.456488,
+        "blockHash": "a5b504c3c38a982939a26920adb53a07be65e9d8c3c61080a71e065ce8ccbe99",
+        "signature": "VS6mriyrLzbkhW+J9yB9OC+MMe8dnzu9MrAhsbu+rIcyc564kq608BmIlpS7XPaKERx3unzDg/XO67Kx+qZN92YaXB3m3a61q3SblrSV1YjY+7PVvpPLejo0Tu1Y1v9jhZmmVSruhH8KqcbWs9jqoeHaTRrhAF/9D6cy5Rx/VoEn1vCQZbqOoAAWRSW7KJS0QYdIz3LBt0GjVnC91Ogp8zWLwWUmAUiOYV27RNZ1h0REVHiWjefppkGoanv908Q/tv8QRMadavG9b5wwTrGLgoGFEsEE8VLZiUWtRLM5WIEKkPnXl9s0JTQqJjT3FGb7hhjw8aAEBCSJPPZoF156jA==",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA22tRgUM3n2wSwQhocfSB\nFojZXwUgRl2ZXWtGRcNRAgWPcN34LwbTw31Idvp+traP6oxDXFrY1pVtJk+aay9r\nHhfrZHGfiqeYkIkiCNjye1XPD48LtZOrxpOm/49Au5B7wcOwYZl8EUUKcZfnSgfw\nmqZoHeGQh4MtB6cy5GfXU6UhrI7mz+zgI2EJmKS19hMYhEkzDafxAcOn1uZ2Hux0\nv0eKug46/tj5Mxe97Mrsb7EQxRJnpf0mkoQ+BlR4orGhixOuVu9iDbEK3oOSZdu4\n45EwMMg56bkeUpH5etHT9AbSWFWkGbzEVXNYWqrBNaRjkDZz/0WJezin+8zlU4gI\nuQIDAQAB\n-----END PUBLIC KEY-----\n"
+    },
+    {
+        "previousBlockHash": "a5b504c3c38a982939a26920adb53a07be65e9d8c3c61080a71e065ce8ccbe99",
+        "commitment": "666db315101030b01b92e16951ee71f9e5060eee4257b734fc2f3f5c1c0af1b1",
+        "token_commitment": "537df46e8f07bf744f133a38ad29c6b7",
+        "zkp": "15be982b0bf45324f41f2b78b3cecbaf0fed8dc139a7488ca12175fce8cd77e7",
+        "encrypted_vote": 2,
+        "timestamp": 1768152354.8638563,
+        "blockHash": "80599508ba58ceda8738982e6f8dacde236fa4809d7fd71447569735bda3ec04",
+        "signature": "E6R5XYsmnTTZaFZPxRLjTC2grwpxALkjXPQUA6ANaaEFA1xEZELdPoml0D5OthPuBU7XpIGCLDZ/pcCDOgTxJVd2QaColp496X+k45N3mNCPkOn8qxyZ/QhPnnMl+156543wNuaHZmtNUA4ilCof6UiM5S/jdwu63zZZedqH1qzTvKd06zYDgdVX/7aK9OIBKl/oKxVwOU32S8QOW660T+ME0AMYDgxs7NTSGliuPlBf+GMxzb+i6at/LaId27LGygiXk3WP+Cfd6rAN7Lzov2cNvrHkoGGbdxarfMylbvxx01CF7S0GWsuN8t66w6unoGcCmS3B4EKQcfftVv++Sg==",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvDi324xEUesUibeeyPmG\nihACtjSp+7PCe4BFvY1snDK8f9Hc4ggPe4nPsCINA7bjS0ona8Eb6QLi2Pd9svKt\njCwZL3t06zQsN0E9zwRe7UAIsqJ0cUU//v6vyREodt7+4mxbdpAkEKulbpiwFPcP\n+8wjyF8KpPMlLySvXODvNhSVow0+a/pwIHO5Vx/9EJOpcMO1XJjwXCso/hYwUoRh\nXQZGhz3BgbBlg0q673nUMj8uSyTTd1gMBJiq9ZwuppWAblx0f6ww2o51F4lo1YlU\nNUiPjzVhnJmSc7HR0I6quldI546KlkFDJiUFL/gYvhTKw3QOT3drmuSHFJEvQ64U\nDQIDAQAB\n-----END PUBLIC KEY-----\n"
     }
 ]
