@@ -43,23 +43,23 @@
             {% else %}
                 <div class="row g-4">
                 
-                    {% for candidate in candidates %}
+                    {% for c in candidates %}
                         <div class="col-md-4">
                             <div class="card position-relative">
                             
-                                <form method="POST" action="{{ url_for('delete_candidate', id_candidate=candidate.id) }}" class="position-absolute top-0 end-0 m-2">
+                                <form method="POST" action="{{ url_for('candidate.delete_candidate', id_candidate=c.id) }}" class="position-absolute top-0 end-0 m-2">
                                     <button type="submit" class="btn btn-link text-danger p-0">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
                                 </form>
                             
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ candidate.fullname }}</h5>
+                                    <h5 class="card-title">{{ c.fullname }}</h5>
                                     <p class="card-text text-muted">
-                                        email: {{ candidate.email }}
+                                        email: {{ c.email }}
                                     </p>
                                     <p class="card-text">
-                                        {{ candidate.description }}
+                                        {{ c.description }}
                                     </p>
                                 </div>
                             
@@ -76,7 +76,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
 
-                <form method="POST" action="{{ url_for('get_post_candidates') }}">
+                <form method="POST" action="{{ url_for('candidate.get_post_candidates') }}">
                 
                   <div class="modal-header">
                     <h5 class="modal-title">Add new candidate</h5>

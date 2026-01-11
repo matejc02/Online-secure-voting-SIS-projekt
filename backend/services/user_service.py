@@ -1,9 +1,7 @@
-from flask import request, abort
-from datetime import datetime
-from flask import current_app
-from models.models import db, User, UsedTokens
+from models.models import User, UsedTokens
+from extensions import db
 import secrets
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 def create_admin():
     roles = [user.role for user in db.session.execute(db.select(User)).scalars().all()]

@@ -3,7 +3,8 @@ from functools import wraps
 import jwt
 from datetime import datetime
 from flask import current_app
-from models.models import db, User
+from models.models import User
+from extensions import db
 import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 

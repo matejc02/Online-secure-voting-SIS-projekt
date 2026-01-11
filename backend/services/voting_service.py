@@ -1,4 +1,5 @@
-from models.models import db, VotingStatus, UsedTokens
+from models.models import VotingStatus, UsedTokens
+from extensions import db
 from services.user_service import set_token_to_all_users, get_used_tokens
 from services.json_service import delete_all, create_genesis_block
 from services.blockchain_service import create_commitment, create_zkp, create_block

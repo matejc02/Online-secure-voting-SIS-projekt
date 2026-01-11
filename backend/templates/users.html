@@ -44,21 +44,21 @@
             {% else %}
                 <div class="row g-4">
                 
-                    {% for user in users %}
-                        {% if user.role == "VOTER" %}
+                    {% for u in users %}
+                        {% if u.role == "VOTER" %}
                         <div class="col-md-4">
                             <div class="card position-relative">
                             
-                                <form method="POST" action="{{ url_for('delete_user', id_user=user.id) }}" class="position-absolute top-0 end-0 m-2">
+                                <form method="POST" action="{{ url_for('user.delete_user', id_user=u.id) }}" class="position-absolute top-0 end-0 m-2">
                                     <button type="submit" class="btn btn-link text-danger p-0">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
                                 </form>
                             
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ user.username }}</h5>
+                                    <h5 class="card-title">{{ u.username }}</h5>
                                     <p class="card-text text-muted">
-                                        email: {{ user.email }}
+                                        email: {{ u.email }}
                                     </p>
                                 </div>
                             
@@ -76,7 +76,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
 
-                <form method="POST" action="{{ url_for('get_post_users') }}">
+                <form method="POST" action="{{ url_for('user.get_post_users') }}">
                 
                   <div class="modal-header">
                     <h5 class="modal-title">Add new user</h5>

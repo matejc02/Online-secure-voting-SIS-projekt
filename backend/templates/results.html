@@ -36,13 +36,13 @@
             {% else %}
                 <div class="row g-4">
                 
-                    {% for candidate, vote in data.items() %}
+                    {% for c, v in data.items() %}
                         <div class="col-md-4">
                             <div class="card result-card shadow-sm">
                                 <div class="card-body text-center">
-                                    <h5 class="card-title">Cnadidate: {{ candidate }}</h5>
+                                    <h5 class="card-title">Cnadidate: {{ c }}</h5>
                                     <p class="votes text-primary">
-                                        Number of votes: {{ vote }}
+                                        Number of votes: {{ v }}
                                     </p>
                                 </div>
                             </div>

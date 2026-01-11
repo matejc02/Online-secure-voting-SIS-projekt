@@ -1,13 +1,14 @@
-from flask import Flask, abort, render_template, redirect, url_for, flash, request, make_response
-from functools import wraps
-from flask_jwt_extended import jwt_required
-from datetime import datetime, timedelta
-from models.models import db, VotingStatus
-from services.authentication_service import jwt_required, login_user, register_user
-from services.candidate_service import create_candidate, get_all_candidates, get_candidate_by_id, delete_candidate_f
-from services.user_service import create_user, get_all_users, delete_user_f, create_admin, get_user_by_id, delete_users_token
-from services.voting_service import start_voting, stop_voting, is_voting_active, create_vote
-from services.blockchain_service import calculate_winner
+from flask import Flask
+from datetime import timedelta
+from models.models import VotingStatus
+from extensions import db
+from services.user_service import create_admin
+from controllers.auth_controller import auth_bp
+from controllers.candidates_controller import candidate_bp
+from controllers.result_controller import result_bp
+from controllers.user_controller import user_bp
+from controllers.vote_controller import vote_bp
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'fjm034jhf0439uf423huj546890z2mf03j406h4v'
@@ -24,192 +25,11 @@ with app.app_context():
         db.session.commit()
     create_admin()
 
-@app.route("/")
-def get_home_page():
-    return render_template("home.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def get_post_login():
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-        print(" " + email + " " + password)
-
-        message = login_user(email, password)
-
-        if message['success'] == False:
-            print(message['message'])
-            return redirect(url_for('get_home_page'))
-
-        if message['user'].role == 'ADMIN':
-            response = make_response(redirect(url_for('get_show_results')))
-            jwt_token = message['token']
-            response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
-            return response
-        
-        response = make_response(redirect(url_for('get_vote')))
-        jwt_token = message['token']
-        response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
-        return response
-    
-    return render_template('login.html')
-
-@app.route("/register", methods=["GET", "POST"])
-def get_post_register():
-    if request.method == "POST":
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        print(" " + username + " " + email + " " + password)
-
-        message = register_user(username, email, password)
-
-        if message['message'] != "success":
-            print(message['message'])
-            return redirect(url_for('get_home_page'))
-        
-        response = make_response(redirect(url_for('get_vote')))
-        jwt_token = message['token']
-        response.set_cookie("access_token", jwt_token, httponly=True, secure=False)
-        return response
-
-    return render_template('register.html')
-
-@app.route('/vote')
-@jwt_required('VOTER')
-def get_vote():
-    data = []
-    if is_voting_active():
-        data = get_all_candidates()['data']
-        return render_template('vote.html', candidates=data)
-
-    message = calculate_winner()
-    if message['success']:
-        data.append(message['winner'])
-        return render_template('vote.html', candidates=data)
-
-    return render_template('vote.html', candidates=data)
-
-@app.route('/vote/<int:id_candidate>', methods=["POST"])
-@jwt_required('VOTER')
-def post_vote(id_candidate):
-    if is_voting_active():
-        print(id_candidate)
-
-        user_id = request.user['user_id']
-        print(user_id)
-        user = get_user_by_id(user_id)
-        token = user.voting_token
-
-        message = get_candidate_by_id(id_candidate)
-        if message['success']:
-            create_vote(message['candidate'], token)
-            delete_users_token(user.id)
-
-        return redirect(url_for('get_vote'))
-
-    return redirect(url_for('get_vote'))
-
-@app.route('/candidates', methods=["GET", "POST"])
-@jwt_required('ADMIN')
-def get_post_candidates():
-    if request.method == "POST":
-        if is_voting_active():
-            abort(403)
-
-        username = request.form.get("name")
-        email = request.form.get("email")
-        description = request.form.get("description")
-
-        print(" " + username + " " + email + " " + description)
-        create_candidate(username, email, description)
-
-        return redirect(url_for('get_post_candidates'))
-
-    message = get_all_candidates()
-    data = []
-    if message["success"]:
-        print(message['data'])
-        data = message['data']
-    else:
-        print(message['message'])
-    return render_template('candidates.html', candidates=data)
-
-@app.route('/deleteCandidate/<int:id_candidate>', methods=["POST"])
-@jwt_required('ADMIN')
-def delete_candidate(id_candidate):
-    if is_voting_active():
-        abort(403)
-    delete_candidate_f(id_candidate)
-    return redirect(url_for('get_post_candidates'))
-
-@app.route('/allUsers', methods=["GET", "POST"])
-@jwt_required('ADMIN')
-def get_post_users():
-    if request.method == "POST":
-        username = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        print(" " + username + " " + email + " " + password)
-
-        create_user(username, email, password)
-        return redirect(url_for('get_post_users'))
-
-    message = get_all_users()
-    data = []
-    if message["success"]:
-        print(message['data'])
-        data = message['data']
-    else:
-        print(message['message'])
-    return render_template('users.html', users=data)
-
-@app.route('/deleteUser/<int:id_user>', methods=["POST"])
-@jwt_required('ADMIN')
-def delete_user(id_user):
-    if is_voting_active():
-        abort(403)
-    delete_user_f(id_user)
-    return redirect(url_for('get_post_users'))
-
-@app.route('/voting/start', methods=["POST"])
-@jwt_required('ADMIN')
-def start_voting_route():
-    start_voting()
-    return redirect(request.referrer)
-
-@app.route('/voting/stop', methods=["POST"])
-@jwt_required('ADMIN')
-def stop_voting_route():
-    stop_voting()
-    return redirect(request.referrer)
-
-@app.route('/results')
-@jwt_required('ADMIN')
-def get_show_results():
-    message = calculate_winner()
-    data = []
-    if message['success']:
-        data = message['votes']
-    
-    return render_template('results.html', data=data)
-
-@app.route('/winner')
-@jwt_required()
-def get_winner():
-    message = calculate_winner()
-    data = ""
-    if message['success']:
-        data = message['winner']
-    
-    return render_template('winner.html', data=data)
-
-@app.route('/logout')
-@jwt_required()
-def logout():
-    response = make_response(redirect(url_for('get_home_page')))
-    response.delete_cookie('access_token')
-    return response
+app.register_blueprint(auth_bp)
+app.register_blueprint(candidate_bp)
+app.register_blueprint(result_bp)
+app.register_blueprint(user_bp)
+app.register_blueprint(vote_bp)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)

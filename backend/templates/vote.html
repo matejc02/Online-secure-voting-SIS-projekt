@@ -12,7 +12,7 @@
     <body>
         <div>
             <h2>Please pick your candidate</h2>
-            <button><a href="{{url_for('logout')}}">Logout</a></button>
+            <button><a href="{{url_for('auth.logout')}}">Logout</a></button>
         </div>
         <div>
             <h4>Candidates:</h4>
@@ -39,23 +39,23 @@
                 {% else %}
                 <div class="row g-4">
                 
-                    {% for candidate in candidates %}
+                    {% for c in candidates %}
                         <div class="col-md-4">
                             <div class="card position-relative">
                             
-                                <form method="POST" action="{{ url_for('post_vote', id_candidate=candidate.id) }}" class="position-absolute top-0 end-0 m-2">
+                                <form method="POST" action="{{ url_for('vote.post_vote', id_candidate=c.id) }}" class="position-absolute top-0 end-0 m-2">
                                     <button type="submit" class="btn btn-link text-blue p-0">
                                         <i class="fa-solid fa-check"></i>
                                     </button>
                                 </form>
                             
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ candidate.fullname }}</h5>
+                                    <h5 class="card-title">{{ c.fullname }}</h5>
                                     <p class="card-text text-muted">
-                                        email: {{ candidate.email }}
+                                        email: {{ c.email }}
                                     </p>
                                     <p class="card-text">
-                                        {{ candidate.description }}
+                                        {{ c.description }}
                                     </p>
                                 </div>
                             

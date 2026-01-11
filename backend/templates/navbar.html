@@ -3,17 +3,17 @@
         <h1 class="mb-0">Online Voting System</h1>
         <br><br>
         <div class="buttons_navbar">
-            <a href="{{ url_for('get_show_results') }}" class="btn btn-outline-dark me-2">Show results</a>
-            <a href="{{ url_for('get_post_candidates') }}" class="btn btn-outline-dark me-2">Show candidates</a>
-            <a href="{{ url_for('get_winner') }}" class="btn btn-outline-dark me-2">Current winner</a>
-            <a href="{{ url_for('get_post_users') }}" class="btn btn-outline-dark me-2">Edit users</a>
-            <form method="POST" action="{{ url_for('start_voting_route') }}" class="d-inline">
+            <a href="{{ url_for('result.get_show_results') }}" class="btn btn-outline-dark me-2">Show results</a>
+            <a href="{{ url_for('candidate.get_post_candidates') }}" class="btn btn-outline-dark me-2">Show candidates</a>
+            <a href="{{ url_for('result.get_winner') }}" class="btn btn-outline-dark me-2">Current winner</a>
+            <a href="{{ url_for('user.get_post_users') }}" class="btn btn-outline-dark me-2">Edit users</a>
+            <form method="POST" action="{{ url_for('vote.start_voting_route') }}" class="d-inline">
                 <button class="btn btn-outline-dark me-2">Start voting</button>
             </form>
-            <form method="POST" action="{{ url_for('stop_voting_route') }}" class="d-inline">
+            <form method="POST" action="{{ url_for('vote.stop_voting_route') }}" class="d-inline">
                 <button class="btn btn-outline-dark me-2">Stop voting</button>
             </form>
-            <a href="{{ url_for('logout') }}" class="btn btn-outline-dark">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-dark">Logout</a>
         </div>
     </div>
 </nav>
